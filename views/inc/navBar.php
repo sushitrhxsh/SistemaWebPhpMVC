@@ -4,7 +4,7 @@
         <i class="fas fa-exchange-alt"></i>
     </a>
 
-    <a href="user-update.html">
+    <a href="<?php echo SERVERURL; ?>user-update/">
         <i class="fas fa-user-cog"></i>
     </a>
 

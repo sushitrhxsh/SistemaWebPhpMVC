@@ -9,7 +9,7 @@
                 "home", "company", 
                 "client-list",      "client-new",       "client-search",        "client-update",
                 "item-list",        "item-new",         "item-search",          "item-update", 
-                "reservation-list", "reservation-new",  "reservation-search",   "reservation-update",
+                "reservation-list", "reservation-new",  "reservation-search",   "reservation-update", "reservation-reservation", "reservation-pending",
                 "user-list",        "user-new",         "user-search",          "user-update",
             ];
             if(in_array($vistas,$listaBlanca)){
