@@ -103,7 +103,61 @@
             } else {
                 return true;
             }
+        }
+        
+        /*----- funcion paginador de tablas ----- */
+        protected static function paginadorTablas($pagina, $numPaginas, $url, $botones) {
+            $tabla = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
+            
+            if($pagina == 1){
+                $tabla.= '<li class="page-item disabled">
+                            <a class="page-link"><i class="fa-solid fa-angles-left"></i></a>
+                          </li>';
+            } else {
+                $tabla.= '<li class="page-item">
+                            <a class="page-link" href="'.$url.'1/"><i class="fa-solid fa-angles-left"></i></a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="'.$url.($pagina-1).'">Anterior</a>
+                          </li>';
+            }
 
+            $count = 0;
+            for($i = $pagina; $i <= $numPaginas; $i++) {
+                if ($count >= $botones) {
+                    break;
+                }
+
+                if($pagina == $i) {
+                    $tabla.= '<li class="page-item">
+                                <a class="page-link active" href="'.$url.$i.'/">'.$i.'</a>
+                              </li>';
+                } else {
+                    $tabla.= '<li class="page-item">
+                                <a class="page-link" href="'.$url.$i.'/">'.$i.'</a>
+                              </li>';
+                }
+
+                $count++;
+            }
+
+            if($pagina == $numPaginas){
+                $tabla.= '<li class="page-item disabled">
+                            <a class="page-link"><i class="fa-solid fa-angles-right"></i></a>
+                          </li>';
+            } else {
+                $tabla.= '<li class="page-item">
+                            <a class="page-link" href="'.$url.($pagina-1).'">Siguiente</a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="'.$url.$numPaginas.'/"><i class="fa-solid fa-angles-right"></i></a>
+                          </li>
+                          ';
+            }
+            
+            $tabla.='</ul></nav>';
+
+            return $tabla;
         }
 
     }
