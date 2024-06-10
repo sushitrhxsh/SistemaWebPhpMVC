@@ -11,10 +11,15 @@
 
         /*----- funcion para conectar a BD ----- */
         protected static function conectar() {
-            $conn = new PDO(SGBD, USER, PASS);
-            $conn->exec("SET CHARACTER SET utf8");
-            
-            return $conn;
+            try
+            {
+                $conn = new PDO(SGBD, USER, PASS);
+                $conn->exec("SET CHARACTER SET utf8");
+                
+                return $conn;
+            } catch(PDOException $e) {
+                die("Connection failed: ".$e->getMessage()." ...");
+            }
         }
 
         /*----- funcion consultas simples ----- */

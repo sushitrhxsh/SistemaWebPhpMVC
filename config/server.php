@@ -1,7 +1,7 @@
 <?php
     
     const SERVER = "localhost";
-    const DB     = "db_prestamos";
+    const DB     = "bd_prestamos";
     const USER   = "root";
     const PASS   = "";
 

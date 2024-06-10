@@ -3,6 +3,7 @@
 
     class userModel extends mainModel
     {
+        
         /*----- Modelo agregar usuario  -----*/
         protected static function agregarUserModel($datos) {
             $sql = mainModel::conectar()->prepare("INSERT INTO usuario(usuario_dni,usuario_nombre,usuario_apellido,usuario_telefono,usuario_direccion,usuario_email,usuario_usuario,usuario_clave,usuario_estado,usuario_privilegio) 
