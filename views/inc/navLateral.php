@@ -7,7 +7,7 @@
 			<i class="far fa-times-circle show-nav-lateral"></i>
 			<img src="<?php echo SERVERURL; ?>views/assets/avatar/Avatar.png" class="img-fluid" alt="Avatar">
 			<figcaption class="roboto-medium text-center">
-				USER <br><small class="roboto-condensed-light">Web Developer</small>
+				<?php echo $_SESSION['nombre_spf']." ".$_SESSION['apellido_spf']; ?> <br><small class="roboto-condensed-light"><?php echo $_SESSION['usuario_spf']; ?></small>
 			</figcaption>
 		</figure>
 		<div class="full-box nav-lateral-bar"></div>

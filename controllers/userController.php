@@ -211,6 +211,7 @@
                 exit();
             }
 
+            // Array de datos Usuario Registro
             $datosUserReg = [
                 "DNI"       => $dni,
                 "Nombre"    => $nombre ,

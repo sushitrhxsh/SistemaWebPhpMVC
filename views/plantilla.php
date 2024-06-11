@@ -19,7 +19,16 @@
 		if($vistas == "login" || $vistas == "404") {
 			require_once "views/contents/".$vistas."-view.php";
 		
-		} else {	
+		} else {
+			session_start(['name' => 'SPF']);	
+
+			require_once "./controllers/loginController.php";
+			$ins_lc = new loginController();
+
+			if(isset($_SESSION['token_spf']) || isset($_SESSION['usuario_spf']) || isset($_SESSION['privilegio_spf']) || isset($_SESSION['id_spf'])){
+				echo $ins_lc->forzarCierreSesionController();
+				exit();
+			}
 	?>
 
 	<!-- Main container -->

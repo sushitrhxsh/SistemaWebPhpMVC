@@ -14,7 +14,7 @@
 
 
     } else {
-        session_start(['name'=>'SPF']);
+        session_start(['name' => 'SPF']);
         session_unset();
         session_destroy();
         header("Location:".SERVERURL."login/");
