@@ -48,9 +48,10 @@
 	</main>
 	
 	<!-- js script rute -->
-	<?php   
+	<?php 
+		include "views/inc/logOut.php";  
 		}
-		include "views/inc/script.php"   
+		include "views/inc/script.php";
 	?>
 </body>
 </html>

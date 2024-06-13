@@ -1,3 +1,10 @@
+<?php 
+	if($_SESSION['privilegio_spf'] != 1){
+		echo $ins_lc->forzarCierreSesionController();
+		exit();
+	}
+?>
+
 <!-- Page header -->
 <div class="full-box page-header">
 	<h3 class="text-left">

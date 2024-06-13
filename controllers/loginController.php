@@ -103,6 +103,31 @@
 
         } /* Fin controlador */
 
+        /*----- Controlador  cerrar sesion  -----*/
+        public function cerrarSesionController() {
+            session_start(['name' => 'SPF']);
+            $token = mainModel::decryption($_POST['token']);
+            $usuario = mainModel::decryption($_POST['usuario']);
+
+            if($token == $_SESSION['token_spf'] && $usuario == $_SESSION['usuario_spf']){
+                session_unset();
+                session_destroy();
+                $alerta = [
+                    "Alerta" => "redireccionar",
+                    "URL"    => SERVERURL."login/",
+                ];
+            } else {
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "No se pudo cerrar la sesion, intente nuevamente.",
+                    "Tipo"   => "error"
+                ];
+            }
+            echo json_encode($alerta);
+            
+        } /* Fin controlador */
+
 
     }
 
