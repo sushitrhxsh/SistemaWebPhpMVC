@@ -58,9 +58,6 @@ function enviarFormularioAjax(e) {
             });
         }
     });
-
-
-
 }
 
 formulariosAjax.forEach(f => {

@@ -20,7 +20,9 @@
 			require_once "views/contents/".$vistas."-view.php";
 		
 		} else {
-			session_start(['name' => 'SPF']);	
+			session_start(['name' => 'SPF']);
+			
+			$pagina = explode("/",$_GET['views']);
 
 			require_once "./controllers/loginController.php";
 			$ins_lc = new loginController();
