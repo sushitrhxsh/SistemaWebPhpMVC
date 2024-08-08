@@ -23,9 +23,32 @@
             return $sql;
         }
 
+        /*----- Modelo eliminar usuario  -----*/
+        protected static function eliminarUserModel($id) {
+            $sql = mainModel::conectar()->prepare("DELETE FROM usuario where usuario_id =:Id");
+            $sql->bindParam(':Id', $id);
+            $sql->execute();
+
+            return $sql;
+        }
+
+        /*----- Modelo datos usuario  -----*/
+        protected static function datosUserModel($tipo, $id) {
+            if($tipo == "Unico"){
+                $sql = mainModel::conectar()->prepare("SELECT * FROM usuario WHERE usuario_id = :Id");
+                $sql->bindParam(':Id',$id);
+
+            } elseif($tipo == "Conteo") {
+                $sql = mainModel::conectar()->prepare("SELECT usuario_id FROM usuario WHERE usuario_id != '1'");
+            }
+
+            $sql->execute();
+            return $sql;
+        }
+
+
 
     }
-
 
 
 ?>

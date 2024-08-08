@@ -2,7 +2,7 @@
     $peticionAjax = true;
     require_once "../config/app.php";
 
-    if(isset($_POST['usuario_dni_reg'])){
+    if(isset($_POST['usuario_dni_reg']) || isset($_POST['usuario_id_del']) ){
         // --------- Instancia al controlador -----------
         require_once "../controllers/userController.php";
         $ins_user = new userController();
@@ -10,6 +10,11 @@
         // --------- Agregar un usuario --------------
         if(isset($_POST['usuario_dni_reg']) && isset($_POST['usuario_nombre_reg'])){
             echo $ins_user->agregarUserController();
+        }
+
+        // ------ Eliminar un usuario --------
+        if(isset($_POST['usuario_id_del'])){
+            echo $ins_user->eliminarUserController();
         }
 
 
@@ -20,6 +25,5 @@
         header("Location:".SERVERURL."login/");
         exit();
     }
-
 
 ?>

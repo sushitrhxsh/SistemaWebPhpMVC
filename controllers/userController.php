@@ -269,9 +269,9 @@
             
             if(isset($busqueda) && $busqueda != ""){
                 $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario WHERE ((usuario_id != '$id' AND usuario_id != '1') 
-                AND (usuario_dni LIKE '%$busqueda%' OR usuario_nombre LIKE '%$busqueda%' OR usuario_apellido LIKE '%$busqueda%' 
-                OR usuario_telefono LIKE '%$busqueda%') OR usuario_email LIKE '%$busqueda%' OR usuario_usuario LIKE '%$busqueda%') 
-                ORDER BY usuario_nombre ASC LIMIT $inicio,$registros";
+                            AND (usuario_dni LIKE '%$busqueda%' OR usuario_nombre LIKE '%$busqueda%' OR usuario_apellido LIKE '%$busqueda%' 
+                            OR usuario_telefono LIKE '%$busqueda%') OR usuario_email LIKE '%$busqueda%' OR usuario_usuario LIKE '%$busqueda%') 
+                            ORDER BY usuario_nombre ASC LIMIT $inicio,$registros";
 
             } else {
                 $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario WHERE usuario_id != '$id' AND usuario_id != '1' ORDER BY usuario_nombre ASC LIMIT $inicio,$registros";
@@ -305,7 +305,8 @@
             
             if($total > 1 && $pagina <= $numPaginas){
                 $count = $inicio+1;
-                
+                $reg_inicio = $inicio+1;
+
                 foreach($datos as $row){
                     $tabla.= '
                     <tr class="text-center">
@@ -317,13 +318,14 @@
                         <td>'.$row['usuario_usuario'].'</td>
                         <td>'.$row['usuario_email'].'</td>
                         <td>
-                            <a href="<?php echo SERVERURL; ?>user-update/" class="btn btn-success">
+                            <a href="<?php echo SERVERURL; ?>user-update/'.mainModel::encryption($row['usuario_id']).'/" class="btn btn-success">
                                 <i class="fas fa-sync-alt"></i>
                             </a>
                         </td>
                         <td>
-                            <form action="">
-                                <button type="button" class="btn btn-warning">
+                            <form class="FormularioAjax" action="'. SERVERURL .'ajax/userAjax.php" method="POST" data-form="delete" autocomplete="off">
+                            <input type="hidden" name="usuario_id_del" value="'.mainModel::encryption($row['usuario_id']).'" />    
+                            <button type="submit" class="btn btn-warning">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </form>
@@ -332,6 +334,7 @@
                     $count++;
 
                 }
+                $reg_final = $count-1;
             } else {
                 if($total >= 1){
                     $tabla.='<tr class="text-center">
@@ -344,15 +347,100 @@
             }
             
             $tabla.= '</tbody></table></div>';
-
-            if($total > 1 && $pagina <= $numPaginas){
+            if($total >= 1 && $pagina <= $numPaginas){
+                $tabla.= '<p class="text-right">Mostrando usuarios '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.'</p>';
                 $tabla.= mainModel::paginadorTablas($pagina,$numPaginas,$url,7);
             }
 
             return $tabla;
         }/* fin controlador */
 
-    }
+        /*----- Controlador Eliminar los usuarios  -----*/
+        public function eliminarUserController() {
+            // recibir id del usuario
+            $id = mainModel::decryption($_POST['usuario_id_del']);
+            $id = mainModel::limpiarCadena($id);
 
+            // usuario master
+            if($id == 1){
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "No podemos eliminar el usuario principal del sistema",
+                    "Tipo"   => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
+
+            // comprobar usuarios de bd
+            $check_usuarios = mainModel::ejecutarConsultaSimple("SELECT usuario_id FROM usuario WHERE usuario_id ='$id'");
+            if($check_usuarios->rowCount() > 0){
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "El usuario que intenta eliminar no existe en la base de datos",
+                    "Tipo"   => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
+
+            // comprobar prestamos
+            $check_prestamos = mainModel::ejecutarConsultaSimple("SELECT usuario_id FROM prestamo WHERE usuario_id ='$id' LIMIT 1");
+            if($check_prestamos->rowCount() <= 0){
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "No podemos eliminar este usuario, debido a que contiene prestamos asociados, recomendamos deshabilitar el usuario si no es utilizado.",
+                    "Tipo"   => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
+
+            // comprobar privilegios
+            session_start(['name' => 'SPF']);
+            if($_SESSION['privilegio_spf'] != 1){
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "No tienes los permisos necesarios para realizar esta operacion.",
+                    "Tipo"   => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
+
+            $eliminarUsuario = userModel::eliminarUserModel($id);
+            if($eliminarUsuario->rowCount() == 1){
+                $alerta = [
+                    "Alerta" => "recargar",
+                    "Titulo" => "Usuario eliminado",
+                    "Texto"  => "El usuario ha sido eliminado correctamente.",
+                    "Tipo"   => "success"
+                ];
+            } else {
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error inesperado",
+                    "Texto"  => "No hemos podido eliminar el usuario, intentelo nuevamente",
+                    "Tipo"   => "error"
+                ];
+            }
+            echo json_encode($alerta);
+        }/* fin controlador */
+
+        /*----- Controlador Datos los usuarios  -----*/
+        public function datosUserController($tipo,$id) {
+            $tipo = mainModel::limpiarCadena($tipo);
+            
+            $id = mainModel::decryption($id);
+            $id = mainModel::limpiarCadena($id);
+
+            return userModel::datosUserModel($tipo,$id);
+        }/* fin controlador */
+
+    }
 
 ?>
